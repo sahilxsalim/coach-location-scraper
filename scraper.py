@@ -25,7 +25,8 @@ class CoachOutletScraper:
     def get_products_page(self, page: int) -> dict:
         """Fetch products from a specific page"""
         # url = f"{self.base_url}/get-shop/wallets/large-wallets"
-        url = f"{self.base_url}/get-shop/wallets/small-wallets"
+        # url = f"{self.base_url}/get-shop/wallets/small-wallets"
+        url = f"{self.base_url}/get-shop/women/bags"
         params = {
             "gender": "Women",
             "page": page
@@ -115,7 +116,7 @@ class CoachOutletScraper:
                             logging.info(f"Found available product: {product_info['name']} ({product_info['id']})")
                         
                         # Add a small delay to avoid overwhelming the server
-                        time.sleep(0.5)
+                        # time.sleep(0.5)
                         
                     except Exception as e:
                         logging.error(f"Error processing product {idx} on page {page}: {str(e)}")
@@ -141,6 +142,12 @@ def main():
         # Get available products
         available_products = scraper.scrape_available_products()
         
+        # Save results to JSON file
+        output_filename = f"available_products_{scraper.store_name.lower()}_{time.strftime('%Y%m%d_%H%M%S')}.json"
+        with open(output_filename, 'w') as f:
+            json.dump(available_products, f, indent=2)
+        logging.info(f"Results saved to {output_filename}")
+        
         # Print results
         print("\nAvailable Products at", scraper.store_name)
         print("-" * 50)
@@ -153,6 +160,7 @@ def main():
         
         logging.info(f"Total available products: {len(available_products)}")
         print(f"\nTotal available products: {len(available_products)}")
+        print(f"Results saved to {output_filename}")
         
     except Exception as e:
         logging.error(f"Error in main: {str(e)}")
